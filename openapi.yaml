@@ -1,0 +1,118 @@
+openapi: 3.0.3
+info:
+  title: MyGoLangApp API
+  version: "1.0.0"
+servers:
+  - url: http://localhost:8080
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: "Unauthenticated: missing or invalid token"
+      required:
+        - code
+        - message
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        token:
+          type: string
+  responses:
+    RegisterResponse:
+      description: return register success message
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Success Register"
+    LoginResponse:
+      description: return token and user information
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/User'
+    BadRequestError:
+      description: User is authenticated but not authorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            forbidden:
+              value:
+                code: 400
+                message: "Bad Request: error parsing data"
+    UnauthorizedError:
+      description: Authentication failed or missing credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            unauthenticated:
+              summary: Missing or invalid token
+              value:
+                code: 401
+                message: "Unauthenticated: missing or invalid token"
+
+paths:
+  /v1/auth/register:
+    post:
+      summary: Login with email + password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, confirmPassword]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                confirmPassword:
+                  type: string
+      responses:
+        "200":
+          $ref: '#/components/responses/RegisterResponse'
+        "400":
+          $ref: '#/components/responses/BadRequestError'
+  /v1/auth/login:
+    post:
+      summary: Login with email + password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        "200":
+          $ref: '#/components/responses/LoginResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedError'
