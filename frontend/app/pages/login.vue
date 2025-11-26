@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ModelError, User } from '../../generated/openapi-client'
+import type { ModelError } from '../../generated/openapi-client'
 import * as z from 'zod'
 import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
 
@@ -31,6 +31,7 @@ definePageMeta({
 
 const auth = useAuthStore()
 const toast = useToast()
+const api = useApiClient()
 
 const fields: AuthFormField[] = [
   {
@@ -57,25 +58,22 @@ const schema = z.object({
 type Schema = z.output<typeof schema>
 
 async function onSubmit(payload: FormSubmitEvent<Schema>) {
-  // const { api } = useGeneratedClient()
   try {
+    // const { api } = useGeneratedClient()
     // const data = await api.v1AuthLoginPost({
     //   v1AuthLoginPostRequest: {
     //     email: payload.data.email,
     //     password: payload.data.password
     //   }
     // })
-    const res = await $fetch<User>('/api/login', {
-      method: 'POST',
-      body: {
-        email: payload.data.email,
-        password: payload.data.password
-      }
-    })
+    const response = await api.apiLogin(
+      payload.data.email,
+      payload.data.password
+    )
     auth.setUser({
-      id: res.id!,
-      email: res.email!,
-      token: res.token!
+      id: response.id!,
+      email: response.email!,
+      token: response.token!
     })
     toast.add({ title: 'success login' })
     window.location.assign('/dashboard')

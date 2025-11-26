@@ -1,99 +1,94 @@
-import { vi, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, vi, it, expect, beforeEach, afterEach } from 'vitest'
 import { mountSuspended, mockNuxtImport } from '@nuxt/test-utils/runtime'
 import Login from '~/pages/login.vue'
 import AuthForm from '@nuxt/ui/components/AuthForm.vue'
 
-const dashboardV1AuthLoginPostMockMock = vi.fn()
+const apiLoginMock = vi.fn()
 const toastAddMock = vi.fn()
 const setUserMock = vi.fn()
 
-beforeEach(() => {
-  const { useGeneratedClientMock, useToastMock, useAuthStoreMock } = vi.hoisted(
-    () => {
-      return {
-        useGeneratedClientMock: vi.fn(() => {
-          return {
-            api: { dashboardV1AuthLoginPost: dashboardV1AuthLoginPostMockMock }
-          }
-        }),
-        useToastMock: vi.fn(() => {
-          return {
-            add: toastAddMock
-          }
-        }),
-        useAuthStoreMock: vi.fn(() => {
-          return {
-            getUser: () => null,
-            setUser: setUserMock
-          }
-        })
+describe('Login Page', () => {
+  beforeEach(() => {
+    const { useApiClientMock, useToastMock, useAuthStoreMock } = vi.hoisted(
+      () => {
+        return {
+          useApiClientMock: vi.fn(() => {
+            return {
+              apiLogin: apiLoginMock
+            }
+          }),
+          useToastMock: vi.fn(() => {
+            return {
+              add: toastAddMock
+            }
+          }),
+          useAuthStoreMock: vi.fn(() => {
+            return {
+              getUser: () => null,
+              setUser: setUserMock
+            }
+          })
+        }
       }
-    }
-  )
-  mockNuxtImport('useGeneratedClient', () => {
-    return useGeneratedClientMock
+    )
+    mockNuxtImport('useApiClient', () => {
+      return useApiClientMock
+    })
+    mockNuxtImport('useToast', () => {
+      return useToastMock
+    })
+    mockNuxtImport('useAuthStore', () => {
+      return useAuthStoreMock
+    })
   })
-  mockNuxtImport('useToast', () => {
-    return useToastMock
-  })
-  mockNuxtImport('useAuthStore', () => {
-    return useAuthStoreMock
-  })
-})
 
-afterEach(() => {
-  vi.clearAllMocks()
-})
+  afterEach(() => {
+    vi.resetAllMocks()
+    vi.clearAllMocks()
+  })
 
-it('Success Login', async () => {
-  dashboardV1AuthLoginPostMockMock.mockResolvedValueOnce({
-    email: 'operation@test.com',
-    role: 'cs',
-    token: 'token'
-  })
-  const page = await mountSuspended(Login, { route: '/login' })
-  const UAuthForm = page.findComponent(AuthForm)
-  UAuthForm.vm.$emit('submit', {
-    data: { email: 'operation@test.com', password: 'password' }
-  })
-  await page.vm.$nextTick()
-  expect(dashboardV1AuthLoginPostMockMock).toBeCalledWith({
-    dashboardV1AuthLoginPostRequest: {
+  it('Success', async () => {
+    apiLoginMock.mockResolvedValueOnce({
+      id: '1',
       email: 'operation@test.com',
-      password: 'password'
-    }
-  })
-  expect(setUserMock).toBeCalledWith({
-    email: 'operation@test.com',
-    role: 'cs',
-    token: 'token'
-  })
-  expect(toastAddMock).toBeCalledWith({
-    title: 'success login'
-  })
-})
-
-it('Error Login', async () => {
-  dashboardV1AuthLoginPostMockMock.mockRejectedValueOnce({
-    code: '500',
-    message: 'error'
-  })
-  const page = await mountSuspended(Login, { route: '/login' })
-  const UAuthForm = page.findComponent(AuthForm)
-  UAuthForm.vm.$emit('submit', {
-    data: { email: 'operation@test.com', password: 'password' }
-  })
-  await page.vm.$nextTick()
-  expect(dashboardV1AuthLoginPostMockMock).toBeCalledWith({
-    dashboardV1AuthLoginPostRequest: {
+      token: 'token'
+    })
+    const page = await mountSuspended(Login, { route: '/login' })
+    const UAuthForm = page.findComponent(AuthForm)
+    UAuthForm.vm.$emit('submit', {
+      data: { email: 'operation@test.com', password: 'password' }
+    })
+    await page.vm.$nextTick()
+    expect(apiLoginMock).toBeCalledWith('operation@test.com', 'password')
+    expect(setUserMock).toBeCalledWith({
+      id: '1',
       email: 'operation@test.com',
-      password: 'password'
-    }
+      token: 'token'
+    })
+    expect(toastAddMock).toBeCalledWith({
+      title: 'success login'
+    })
+    page.unmount()
   })
-  await page.vm.$nextTick()
-  expect(toastAddMock).toBeCalledWith({
-    title: '500',
-    description: 'error',
-    color: 'error'
+
+  it('Error', async () => {
+    apiLoginMock.mockRejectedValueOnce({
+      code: '500',
+      message: 'error'
+    })
+    const page = await mountSuspended(Login, { route: '/login' })
+    const UAuthForm = page.findComponent(AuthForm)
+    UAuthForm.vm.$emit('submit', {
+      data: { email: 'operation@test.com', password: 'password' }
+    })
+    await page.vm.$nextTick()
+    expect(apiLoginMock).toBeCalledWith('operation@test.com', 'password')
+    await page.vm.$nextTick()
+    expect(toastAddMock).toBeCalledWith({
+      title: '500',
+      description: 'error',
+      color: 'error'
+    })
+    page.unmount()
   })
 })

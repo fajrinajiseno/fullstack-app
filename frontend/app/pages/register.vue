@@ -29,7 +29,6 @@ definePageMeta({
 })
 
 const toast = useToast()
-const router = useRouter()
 
 const fields: AuthFormField[] = [
   {
@@ -82,7 +81,7 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
       title: data.message,
       description: 'Please login using your new account'
     })
-    router.push({
+    navigateTo({
       path: '/login'
     })
   } catch (error) {
