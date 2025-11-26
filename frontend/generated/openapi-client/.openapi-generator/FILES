@@ -1,0 +1,16 @@
+apis/DefaultApi.ts
+apis/index.ts
+docs/DefaultApi.md
+docs/ModelError.md
+docs/User.md
+docs/V1AuthLoginPostRequest.md
+docs/V1AuthRegisterPost200Response.md
+docs/V1AuthRegisterPostRequest.md
+index.ts
+models/ModelError.ts
+models/User.ts
+models/V1AuthLoginPostRequest.ts
+models/V1AuthRegisterPost200Response.ts
+models/V1AuthRegisterPostRequest.ts
+models/index.ts
+runtime.ts
