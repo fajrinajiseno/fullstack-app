@@ -21,10 +21,10 @@ import { mapValues } from '../runtime';
 export interface User {
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof User
      */
-    id?: string;
+    id?: number;
     /**
      * 
      * @type {string}

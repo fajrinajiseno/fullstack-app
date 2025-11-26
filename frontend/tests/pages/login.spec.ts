@@ -73,8 +73,8 @@ describe('Login Page', () => {
 
   it('Error', async () => {
     apiLoginMock.mockRejectedValueOnce({
-      code: '500',
-      message: 'error'
+      statusCode: 500,
+      statusMessage: 'error'
     })
     const page = await mountSuspended(Login, { route: '/login' })
     const UAuthForm = page.findComponent(AuthForm)

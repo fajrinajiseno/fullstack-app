@@ -44,6 +44,5 @@ make coverage-html
 
 API:
 
-- POST /dashboard/v1/auth/login {email,password}
-- GET /dashboard/v1/payments?limit=limit,offset=offset,sort=sort,status=status,id=id
-- PUT /dashboard/v1/payment/{id}/review
+- POST /v1/auth/register {email,password,confirmPassword}
+- POST /v1/auth/login {email,password}

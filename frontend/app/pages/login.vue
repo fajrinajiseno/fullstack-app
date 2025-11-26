@@ -21,9 +21,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ModelError } from '../../generated/openapi-client'
 import * as z from 'zod'
 import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
+import type { FetchError } from 'ofetch'
 
 definePageMeta({
   middleware: 'auth'
@@ -77,10 +77,11 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
     })
     toast.add({ title: 'success login' })
     window.location.assign('/dashboard')
-  } catch (error) {
+  } catch (err) {
+    const error = err as FetchError<{ statusMessage?: string }>
     toast.add({
-      title: `${(error as ModelError).code}`,
-      description: (error as ModelError).message,
+      title: `${error.statusCode || 500}`,
+      description: error.statusMessage,
       color: 'error'
     })
   }

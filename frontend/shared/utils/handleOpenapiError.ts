@@ -1,6 +1,6 @@
 import type { ErrorContext, ModelError } from '../../generated/openapi-client'
 
-export async function usehandleError(error: unknown): Promise<ModelError> {
+export async function handleOpenapiError(error: unknown): Promise<ModelError> {
   const text = await (error as ErrorContext).response?.text()
   if (text) {
     const errorParsed: ModelError = JSON.parse(text)

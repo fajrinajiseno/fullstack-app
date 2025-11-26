@@ -2,8 +2,6 @@ import { Configuration, DefaultApi } from '../../generated/openapi-client'
 import { useRuntimeConfig } from '#imports'
 
 export function useGeneratedClient() {
-  const ERROR_UNAUTHORIZED =
-    'security requirements failed: authorization failed'
   const config = useRuntimeConfig()
   const auth = useAuthStore()
   const apiBase = config.public.apiBase || 'http://localhost:8080'
@@ -18,7 +16,7 @@ export function useGeneratedClient() {
       {
         async post(context) {
           if (!context.response.ok) {
-            const errorParsed = await usehandleError(context)
+            const errorParsed = await handleOpenapiError(context)
             if (errorParsed.message.includes(ERROR_UNAUTHORIZED)) {
               await auth.logout()
             } else {

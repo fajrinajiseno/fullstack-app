@@ -67,7 +67,6 @@ func initDB(db *sql.DB) error {
 			return err
 		}
 	}
-	// seed payments if empty
 	var cnt int
 
 	// seed admin user if not exists
