@@ -1,12 +1,12 @@
 package usecase
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/fajrinajiseno/mygolangapp/internal/entity"
 	"github.com/fajrinajiseno/mygolangapp/internal/module/auth/repository"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -40,10 +40,8 @@ func (a *Auth) Register(email string, password string, confirmPassword string) (
 	}
 
 	user := &entity.User{
-		ID:           uuid.NewString(),
 		Email:        email,
 		PasswordHash: string(hashed),
-		CreatedAt:    time.Now().UTC(),
 	}
 
 	if err := a.repo.Save(user); err != nil {
@@ -59,7 +57,7 @@ func (a *Auth) Login(email string, password string) (string, *entity.User, error
 	if err != nil {
 		return "", nil, err
 	}
-	if user.ID == "" {
+	if user.ID == 0 {
 		return "", nil, entity.ErrorNotFound("user not found")
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(password)); err != nil {
@@ -67,7 +65,7 @@ func (a *Auth) Login(email string, password string) (string, *entity.User, error
 	}
 
 	claims := jwt.MapClaims{
-		"sub":   user.ID,
+		"sub":   strconv.Itoa(user.ID),
 		"email": user.Email,
 		"exp":   time.Now().Add(a.ttl).Unix(),
 		"iat":   time.Now().Unix(),

@@ -25,9 +25,10 @@ func TestLoginAndAccessProtected(t *testing.T) {
 
 	const hour24 = 24
 	claims := jwt.MapClaims{
-		"sub": "1",
-		"exp": time.Now().Add(hour24 * time.Hour).Unix(),
-		"iat": time.Now().Unix(),
+		"sub":   "1",
+		"email": "alice@example.com",
+		"exp":   time.Now().Add(hour24 * time.Hour).Unix(),
+		"iat":   time.Now().Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signed, _ := token.SignedString(config.JwtSecret)
@@ -36,7 +37,7 @@ func TestLoginAndAccessProtected(t *testing.T) {
 	mockAuthUC.EXPECT().
 		Login("alice@example.com", "password").
 		Return(signed, &entity.User{
-			ID:           "1",
+			ID:           1,
 			Email:        "alice@example.com",
 			PasswordHash: "password",
 			CreatedAt:    time.Now(),

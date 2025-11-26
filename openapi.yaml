@@ -27,7 +27,7 @@ components:
       type: object
       properties:
         id:
-          type: string
+          type: integer
         email:
           type: string
         token:

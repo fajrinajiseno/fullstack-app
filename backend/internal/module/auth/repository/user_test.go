@@ -27,7 +27,7 @@ func TestGetUserByEmail_Success(t *testing.T) {
 	defer cleanup()
 
 	rows := sqlmock.NewRows([]string{"id", "email", "password_hash", "created_at"}).
-		AddRow("u1", "alice@example.com", "$2a$hash", time.Now())
+		AddRow(1, "alice@example.com", "$2a$hash", time.Now())
 
 	mock.ExpectQuery(regexp.QuoteMeta("SELECT id, email, password_hash, created_at FROM users WHERE email = ?")).
 		WithArgs("alice@example.com").
@@ -36,7 +36,7 @@ func TestGetUserByEmail_Success(t *testing.T) {
 	u, err := repo.GetUserByEmail("alice@example.com")
 	assert.NoError(t, err)
 	assert.NotNil(t, u)
-	assert.Equal(t, "u1", u.ID)
+	assert.Equal(t, 1, u.ID)
 	assert.Equal(t, "alice@example.com", u.Email)
 
 	if err := mock.ExpectationsWereMet(); err != nil {
@@ -83,15 +83,13 @@ func TestSave_Success(t *testing.T) {
 	repo, mock, cleanup := newMockUserRepo(t)
 	defer cleanup()
 
-	mock.ExpectExec(regexp.QuoteMeta("INSERT INTO users (id, email, password_hash, created_at) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE email = VALUES(email), password_hash = VALUES(password_hash)")).
-		WithArgs("u3", "carol@example.com", "password", sqlmock.AnyArg()).
+	mock.ExpectExec(regexp.QuoteMeta("INSERT INTO users (email, password_hash) VALUES (?, ?)")).
+		WithArgs("carol@example.com", "password").
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	userToSave := &entity.User{
-		ID:           "u3",
 		Email:        "carol@example.com",
 		PasswordHash: "password",
-		CreatedAt:    time.Now(),
 	}
 
 	err := repo.Save(userToSave)
@@ -105,20 +103,18 @@ func TestSave_DBError(t *testing.T) {
 	repo, mock, cleanup := newMockUserRepo(t)
 	defer cleanup()
 
-	mock.ExpectExec(regexp.QuoteMeta("INSERT INTO users (id, email, password_hash, created_at) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE email = VALUES(email), password_hash = VALUES(password_hash)")).
-		WithArgs("u3", "carol@example.com", "password", sqlmock.AnyArg()).
+	mock.ExpectExec(regexp.QuoteMeta("INSERT INTO users (email, password_hash) VALUES (?, ?)")).
+		WithArgs("carol@example.com", "password").
 		WillReturnError(errors.New("db fail"))
 
 	userToSave := &entity.User{
-		ID:           "u3",
 		Email:        "carol@example.com",
 		PasswordHash: "password",
-		CreatedAt:    time.Now(),
 	}
 
 	err := repo.Save(userToSave)
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "db error")
+	assert.Contains(t, err.Error(), "db fail")
 
 	if err := mock.ExpectationsWereMet(); err != nil {
 		t.Fatalf("unfulfilled expectations: %v", err)

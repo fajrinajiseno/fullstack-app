@@ -25,17 +25,7 @@ func TestAuth_Register(t *testing.T) {
 		mockRepo.EXPECT().
 			Save(gomock.AssignableToTypeOf(&entity.User{})). // or gomock.Any()
 			DoAndReturn(func(u *entity.User) error {
-				// Assert fields you care about:
-
 				assert.Equal(t, "alice@example.com", u.Email)
-
-				// ID should be non-empty
-				assert.NotEmpty(t, u.ID)
-
-				// CreatedAt should be non-zero (we don't care about exact time)
-				assert.False(t, u.CreatedAt.IsZero())
-
-				// Optional: check password hash logically
 				err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
 				assert.NoError(t, err)
 
@@ -73,20 +63,9 @@ func TestAuth_Register(t *testing.T) {
 		mockRepo.EXPECT().
 			Save(gomock.AssignableToTypeOf(&entity.User{})). // or gomock.Any()
 			DoAndReturn(func(u *entity.User) error {
-				// Assert fields you care about:
-
 				assert.Equal(t, "alice@example.com", u.Email)
-
-				// ID should be non-empty
-				assert.NotEmpty(t, u.ID)
-
-				// CreatedAt should be non-zero (we don't care about exact time)
-				assert.False(t, u.CreatedAt.IsZero())
-
-				// Optional: check password hash logically
 				err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
 				assert.NoError(t, err)
-
 				return errors.New("db fail")
 			})
 
@@ -108,7 +87,7 @@ func TestAuth_Login(t *testing.T) {
 	assert.NoError(t, err)
 
 	user := &entity.User{
-		ID:           "u1",
+		ID:           1,
 		Email:        "alice@example.com",
 		PasswordHash: string(hash),
 		CreatedAt:    time.Now(),
@@ -129,9 +108,7 @@ func TestAuth_Login(t *testing.T) {
 		assert.NotEmpty(t, tokenStr)
 		assert.Equal(t, user, gotUser)
 
-		// validate token can be parsed and subject matches
 		parsed, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
-			// ensure expected alg
 			if token.Method.Alg() != jwt.SigningMethodHS256.Alg() {
 				return nil, errors.New("unexpected alg")
 			}
@@ -142,7 +119,7 @@ func TestAuth_Login(t *testing.T) {
 
 		claims, ok := parsed.Claims.(jwt.MapClaims)
 		assert.True(t, ok)
-		assert.Equal(t, "u1", claims["sub"])
+		assert.Equal(t, "1", claims["sub"])
 		assert.Equal(t, "alice@example.com", claims["email"])
 	})
 

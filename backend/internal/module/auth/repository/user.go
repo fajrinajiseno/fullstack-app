@@ -21,11 +21,11 @@ func NewUserRepo(db *sql.DB) *User {
 }
 
 func (r *User) Save(u *entity.User) error {
-	_, err := r.db.Exec(`INSERT INTO users (id, email, password_hash, created_at) VALUES (?, ?, ?, ?)
-                         ON DUPLICATE KEY UPDATE email = VALUES(email), password_hash = VALUES(password_hash)`,
-		u.ID, u.Email, u.PasswordHash, u.CreatedAt)
+	_, err := r.db.Exec(`INSERT INTO users (email, password_hash)
+		VALUES (?, ?)`,
+		u.Email, u.PasswordHash)
 	if err != nil {
-		return entity.WrapError(err, entity.ErrorCodeInternal, "db error")
+		return entity.WrapError(err, entity.ErrorCodeInternal, err.Error())
 	}
 	return nil
 }
