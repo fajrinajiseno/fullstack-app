@@ -8,10 +8,12 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
+    "typescript-check": "pnpm tsc",
     "lint": "eslint --ext .ts,.js,.vue .",
     "lint:fix": "eslint --ext .ts,.js,.vue . --fix",
     "format": "prettier --write .",
     "openapigen": "npx @openapitools/openapi-generator-cli generate -i ../openapi.yaml -g typescript-fetch -o ./generated/openapi-client",
+    "openapigen-docker": "npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o ./generated/openapi-client",
     "test": "vitest run"
   },
   "dependencies": {

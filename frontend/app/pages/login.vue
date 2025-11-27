@@ -71,7 +71,7 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
       payload.data.password
     )
     auth.setUser({
-      id: response.id!,
+      id: `${response.id}`,
       email: response.email!,
       token: response.token!
     })

@@ -5,8 +5,9 @@ Backend using golang go-chi for http handler and frontend using latest nuxt vers
 Using openapi.yaml to define api specification on backend and then generate api client on frontend.
 Using module auth based on api specification. Later we can create v2 inside those module if needed.
 For persistent data using sqlite for lightweight use and data already seeded during run.
-writing backend unit test on repository, usecase, and service also using mockgen.
-writing frontend unit test on page level using @nuxt/test-utils.
+Writing backend unit test on repository, usecase, and service also using mockgen.
+Writing frontend unit test on page level using @nuxt/test-utils.
+Available command to use docker-compose.
 
 list of tools version of my machine:
 
@@ -73,6 +74,24 @@ pnpm build
 pnpm preview
 ```
 
+Or if You prefer run on docker with production build:
+
+```bash
+make run-docker
+```
+
+or run in detach
+
+```bash
+make run-docker-detach
+```
+
+then if you need to stop
+
+```bash
+make stop-docker
+```
+
 To checking openapi documentations, you can visit this url after backend running.
 
 ```bash
@@ -105,7 +124,6 @@ Visit dashboard:
 ```bash
 http://localhost:3000/dashboard
 ```
-
 
 evidences [video](https://drive.google.com/file/d/1wlLAGCXSUQO50eZW8FeTXmEOh4ec5zbU/view?usp=sharing)
 see backend [README.md](backend/README.md)

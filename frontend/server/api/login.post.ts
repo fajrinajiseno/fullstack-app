@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Set token in httpOnly cookie (same as before)
-    setCookie(event, 'auth_token', token!, {
+    setCookie(event, TOKEN_KEY, token!, {
       httpOnly: process.env.NODE_ENV === 'production',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

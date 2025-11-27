@@ -1,0 +1,15 @@
+# git
+.git
+.gitignore
+
+# generated file
+backend/bin
+backend/data
+backend/vendor
+
+frontend/.nuxt
+frontend/.output
+frontend/node_modules
+
+# editor / OS
+.DS_Store

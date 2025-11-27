@@ -20,7 +20,7 @@ import (
 func main() {
 	_ = godotenv.Load()
 
-	db, err := sql.Open("sqlite3", "dashboard.db?_foreign_keys=1")
+	db, err := sql.Open("sqlite3", "data/dashboard.db?_foreign_keys=1")
 	if err != nil {
 		log.Fatal(err)
 	}

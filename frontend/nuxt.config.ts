@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     preference: 'light'
   },
   runtimeConfig: {
+    backendApiBase: process.env.BACKEND_API_BASE || 'http://backend:8080',
     public: {
       inactivityLimit: Number(process.env.PUBLIC_INACTIVITY_LIMIT || 900000),
       apiBase: ''

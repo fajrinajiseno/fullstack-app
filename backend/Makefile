@@ -1,22 +1,21 @@
-# Default mysql migration settings
-export MYSQL_USER ?= mygolangapp
-export MYSQL_PASS ?= secret
-export MYSQL_HOST ?= 127.0.0.1
-export MYSQL_PORT ?= 3307
-export MYSQL_DATABASE ?= mygolangapp
+UNAME       := $(shell uname)
 
 # Variables
 go_bin ?= go
+go_build ?= build -o bin/mygolangapp main.go
+go_run ?= run main.go
 GO_PACKAGES ?= $(shell go list ./... | grep -v 'examples\|qtest\|mock\|config\|cmd')
-docker_compose ?= docker-compose
-DB_URL ?= mysql://$(MYSQL_USER):$(MYSQL_PASS)@tcp($(MYSQL_HOST):$(MYSQL_PORT))/$(MYSQL_DATABASE)
-MIGRATE_IMAGE = migrate/migrate:v4.15.2
-MIGRATIONS_DIR = ./migrations
 OPENAPI=../openapi.yaml
 GEN_PKG=internal/openapigen
 
 # Default target
 .DEFAULT_GOAL := help
+
+ifeq ($(UNAME), Darwin)
+	BUILD_CMD = CGO_ENABLED=1 $(go_bin) $(go_build)
+else
+	BUILD_CMD = CGO_ENABLED=1 GOOS=linux GOARCH=amd64 $(go_bin) $(go_build)
+endif
 
 help:
 	@echo "Available targets:"
@@ -34,10 +33,10 @@ dep:
 	@go mod vendor
 
 run:
-	CGO_ENABLED=1 $(go_bin) run main.go
+	CGO_ENABLED=1 $(go_bin) $(go_run)
 
 build:
-	CGO_ENABLED=1 $(go_bin) build -o bin/mygolangapp main.go
+	$(BUILD_CMD)
 
 tool-lint:
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
