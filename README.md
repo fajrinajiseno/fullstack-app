@@ -93,20 +93,29 @@ pnpm test:e2e
 
 Or if You prefer run on docker with production build:
 
+make sure you set docker memory above 4GB, example on mac:
+
 ```bash
-make run-docker
+colima start --memory 8 --cpu 4
+```
+
+```bash
+make run-backend-docker
+make run-frontend-docker
 ```
 
 or run in detach
 
 ```bash
-make run-docker-detach
+make run-backend-docker-detach
+make run-frontend-docker-detach
 ```
 
 then if you need to stop
 
 ```bash
-make stop-docker
+make stop-backend-docker
+make stop-frontend-docker
 ```
 
 To checking openapi documentations, you can visit this url after backend running.

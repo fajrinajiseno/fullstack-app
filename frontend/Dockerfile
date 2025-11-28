@@ -5,6 +5,9 @@ FROM node:24.11.0-alpine AS builder
 
 WORKDIR /app
 
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_ENV=production
+
 RUN apk add --no-cache openjdk17-jre-headless
 
 COPY frontend/package.json frontend/pnpm-lock.yaml ./
