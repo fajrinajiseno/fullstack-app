@@ -8,6 +8,7 @@ export default defineConfig({
         test: {
           name: 'nuxt',
           include: ['tests/**/*.spec.ts', 'tests/**/*.test.ts'],
+          exclude: ['tests/e2e/**', '**/*.e2e.{ts,js}'],
           environment: 'nuxt',
           globals: true
         }

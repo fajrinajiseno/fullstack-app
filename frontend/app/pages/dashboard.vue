@@ -1,7 +1,7 @@
 <template>
   <div>
     <ClientOnly>
-      <h1 class="text-lg mb-4">
+      <h1 class="text-lg mb-4" data-testid="dashboard-welcome-text">
         Hello {{ auth.getUser()?.email }}, welcome back
       </h1>
     </ClientOnly>
