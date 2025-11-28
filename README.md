@@ -16,6 +16,8 @@ go version go1.24.0 darwin/arm64
 node v24.11.1
 ```
 
+# Installation
+
 please use gvm and nvm to install the version
 
 install all related requirements:
@@ -39,6 +41,8 @@ nvm use v24.11.1
 npm install -g pnpm
 ```
 
+# Backend
+
 Run backend server on local:
 
 ```bash
@@ -54,13 +58,17 @@ make run
 Run backend server on production build:
 
 ```bash
+cd backend
 make build
 ./bin/mygolangapp
 ```
 
+# Frontend
+
 Run frontend on local:
 
 ```bash
+cd frontend
 cp env.sample .env
 pnpm install
 pnpm openapigen
@@ -70,8 +78,17 @@ pnpm dev
 Run frontend on production build:
 
 ```bash
+cd frontend
 pnpm build
 pnpm preview
+```
+
+Running e2e test:
+
+```bash
+cd frontend
+pnpm prepare-e2e
+pnpm test:e2e
 ```
 
 Or if You prefer run on docker with production build:
@@ -110,7 +127,7 @@ Login by visiting:
 http://localhost:3000/login
 ```
 
-sample credentials:
+Sample credentials:
 
 ```bash
 {

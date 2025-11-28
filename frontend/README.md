@@ -24,6 +24,12 @@ Running unit test:
 pnpm test
 ```
 
+Running e2e test:
+
+```bash
+pnpm pnpm test:e2e
+```
+
 ## Prettier and Lint
 
 Running unit test:

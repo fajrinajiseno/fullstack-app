@@ -15,9 +15,9 @@
     "openapigen": "npx @openapitools/openapi-generator-cli generate -i ../openapi.yaml -g typescript-fetch -o ./generated/openapi-client",
     "openapigen-docker": "npx @openapitools/openapi-generator-cli generate -i openapi.yaml -g typescript-fetch -o ./generated/openapi-client",
     "test": "vitest run",
+    "prepare-e2e": "pnpm exec playwright install",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "prepare-e2e": "pnpm exec playwright install"
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@nuxt/eslint": "1.10.0",
